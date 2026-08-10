@@ -14,134 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Default mock chess students data
-const DEFAULT_CHESS_STUDENTS = [
-  {
-    id: "CHS1001",
-    nameWithInitials: "K.M. Magnus Vance",
-    fullName: "K.M. Magnus Vance",
-    chessName: "Magnus Vance",
-    parentName: "K.M. Sunil Vance",
-    email: "magnus.vance@chessacademy.com",
-    phone: "+94 77 123 4567",
-    dob: "2008-04-15",
-    age: 18,
-    ageGroup: "Under 18 / අවු. 18න් පහළ",
-    school: "Royal College",
-    coachNotes: "Focus on endgame technique and deep tactical calculation under time pressure.",
-    youthTeam: "Team A - Focus to Top 10 Places in Your Category",
-    category: "Grandmaster Squad",
-    fideRating: 2350,
-    fideTitle: "FIDE Master (FM)",
-    playingStyle: "Universal / Dynamic",
-    fideId: "25019842",
-    coach: "GM Alexander Volkov",
-    gender: "Male",
-    onlineHandle: "magnus_vance_99",
-    notes: "Gold Medalist at National Youth Championship 2025. Favorite opening: Sicilian Defense.",
-    createdAt: "2026-08-01T10:15:00.000Z"
-  },
-  {
-    id: "CHS1002",
-    nameWithInitials: "W.A. Sophia Chessov",
-    fullName: "W.A. Sophia Chessov",
-    chessName: "Sophia Chessov",
-    parentName: "W.A. Anusha Chessov",
-    email: "sophia.c@chessacademy.com",
-    phone: "+94 71 987 6543",
-    dob: "2010-11-20",
-    age: 15,
-    ageGroup: "Under 16 / අවු. 16න් පහළ",
-    school: "Visakha Vidyalaya",
-    coachNotes: "Needs guidance in sharp opening lines with Black pieces.",
-    youthTeam: "Team A - Focus to Top 10 Places in Your Category",
-    category: "Advanced Tactics",
-    fideRating: 1920,
-    fideTitle: "Candidate Master (CM)",
-    playingStyle: "Aggressive / Tactical",
-    fideId: "14109823",
-    coach: "Coach Viktor Petrov",
-    gender: "Female",
-    onlineHandle: "sophia_knight_queen",
-    notes: "Silver medalist at Western Province Open. Excellent puzzle solver.",
-    createdAt: "2026-08-02T14:30:00.000Z"
-  },
-  {
-    id: "CHS1003",
-    nameWithInitials: "R.P. Pragyan Anand",
-    fullName: "R.P. Pragyan Anand",
-    chessName: "Pragyan Anand",
-    parentName: "R.P. Raman Anand",
-    email: "pragyan.a@chessacademy.com",
-    phone: "+94 72 345 6789",
-    dob: "2007-01-30",
-    age: 19,
-    ageGroup: "Open / Adult / විවෘත",
-    school: "Ananda College",
-    coachNotes: "Solid positional understanding, highly disciplined student.",
-    youthTeam: "Team B - Focus to Top 25 Places in Your Category",
-    category: "Grandmaster Squad",
-    fideRating: 2480,
-    fideTitle: "International Master (IM)",
-    playingStyle: "Positional / Strategic",
-    fideId: "35022119",
-    coach: "GM Alexander Volkov",
-    gender: "Male",
-    onlineHandle: "pragyan_chess_pro",
-    notes: "Achieved 2 GM Norms. World Youth U-16 Champion runner-up. Catalan Opening specialist.",
-    createdAt: "2026-08-04T09:45:00.000Z"
-  },
-  {
-    id: "CHS1004",
-    nameWithInitials: "E.D. Elena Polgar",
-    fullName: "E.D. Elena Polgar",
-    chessName: "Elena Polgar",
-    parentName: "E.D. Dhammika Polgar",
-    email: "elena.p@chessacademy.com",
-    phone: "+94 75 901 2345",
-    dob: "2012-03-08",
-    age: 14,
-    ageGroup: "Under 14 / අවු. 14න් පහළ",
-    school: "Museaus College",
-    coachNotes: "Extremely dedicated, prefers evening training sessions.",
-    youthTeam: "Team B - Focus to Top 25 Places in Your Category",
-    category: "Intermediate Division",
-    fideRating: 1450,
-    fideTitle: "None",
-    playingStyle: "Endgame Specialist",
-    fideId: "",
-    coach: "Coach Viktor Petrov",
-    gender: "Female",
-    onlineHandle: "elena_checkmate",
-    notes: "Consistent solver of tactical puzzles. Rapidly improving endgame technique.",
-    createdAt: "2026-08-05T11:20:00.000Z"
-  },
-  {
-    id: "CHS1005",
-    nameWithInitials: "D.K. David Kaspar",
-    fullName: "D.K. David Kaspar",
-    chessName: "David Kaspar",
-    parentName: "D.K. Kasun Kaspar",
-    email: "david.kaspar@chessacademy.com",
-    phone: "+94 70 678 9012",
-    dob: "2016-05-14",
-    age: 10,
-    ageGroup: "Under 10 / අවු. 10න් පහළ",
-    school: "Nalanda College",
-    coachNotes: "Young student, loves aggressive tactics and puzzle games.",
-    youthTeam: "Team C - Focus to Top 50 Places in Your Category",
-    category: "Beginner Knights",
-    fideRating: 1080,
-    fideTitle: "None",
-    playingStyle: "Aggressive / Tactical",
-    fideId: "",
-    coach: "Coach Viktor Petrov",
-    gender: "Male",
-    onlineHandle: "little_knight_david",
-    notes: "Won Academy Junior Cup U-10. Enjoys Italian Game and Ruy Lopez openings.",
-    createdAt: "2026-08-06T19:35:43.816Z"
-  }
-];
+
 
 // MongoDB Mongoose Schema & Model
 const studentSchema = new mongoose.Schema({
@@ -181,17 +54,6 @@ if (process.env.MONGODB_URI) {
     .then(async () => {
       isMongoConnected = true;
       console.log('🍃 Successfully connected to MongoDB Atlas!');
-      
-      // Auto-seed if collection has fewer than 10 records
-      const count = await StudentModel.countDocuments();
-      if (count < 10) {
-        console.log(`🌱 MongoDB collection has ${count} records. Syncing full student roster...`);
-        const jsonStudents = readStudentsFromFile();
-        for (const s of jsonStudents) {
-          await StudentModel.updateOne({ id: s.id }, { $set: s }, { upsert: true });
-        }
-        console.log(`✅ Synced ${jsonStudents.length} student records into MongoDB Atlas!`);
-      }
     })
     .catch((err) => {
       console.error('⚠️ MongoDB Connection Error:', err.message);
@@ -203,23 +65,13 @@ if (process.env.MONGODB_URI) {
 function readStudentsFromFile() {
   try {
     if (!fs.existsSync(DATA_FILE)) {
-      const dataDir = path.dirname(DATA_FILE);
-      if (!fs.existsSync(dataDir)) {
-        fs.mkdirSync(dataDir, { recursive: true });
-      }
-      fs.writeFileSync(DATA_FILE, JSON.stringify(DEFAULT_CHESS_STUDENTS, null, 2));
-      return DEFAULT_CHESS_STUDENTS;
+      return [];
     }
     const data = fs.readFileSync(DATA_FILE, 'utf8');
-    const parsed = JSON.parse(data || '[]');
-    if (parsed.length === 0) {
-      fs.writeFileSync(DATA_FILE, JSON.stringify(DEFAULT_CHESS_STUDENTS, null, 2));
-      return DEFAULT_CHESS_STUDENTS;
-    }
-    return parsed;
+    return JSON.parse(data || '[]');
   } catch (err) {
     console.error('Error reading students file:', err);
-    return DEFAULT_CHESS_STUDENTS;
+    return [];
   }
 }
 
