@@ -221,13 +221,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ageGroupSelect.value = cat;
   }
 
-  // Theme Toggle
-  const savedTheme = localStorage.getItem('theme') || 'dark';
+  // Theme Toggle (Default: Light Theme)
+  const savedTheme = localStorage.getItem('theme') || 'light';
   setTheme(savedTheme);
 
   themeToggleBtn.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
   });
 
@@ -592,7 +592,7 @@ document.addEventListener('DOMContentLoaded', () => {
       {
         num: '2.',
         title: 'Youth Team Target Commitment',
-        desc: `The student is enrolled in ${youthTeam}. Daily assignment of tactical puzzles and opening analysis must be completed as prescribed by coaches.`
+        desc: `The student is enrolled in ${youthTeam}. Daily assignment of tactical puzzles and opening analysis must be completed within day.`
       },
       {
         num: '3.',
