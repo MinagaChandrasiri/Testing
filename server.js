@@ -175,7 +175,11 @@ app.get('/api/students', async (req, res) => {
   }
 
   if (sortBy) {
-    if (sortBy === 'rating_high') {
+    if (sortBy === 'age_young') {
+      students.sort((a, b) => (a.age || 0) - (b.age || 0));
+    } else if (sortBy === 'age_old') {
+      students.sort((a, b) => (b.age || 0) - (a.age || 0));
+    } else if (sortBy === 'rating_high') {
       students.sort((a, b) => (b.fideRating || 0) - (a.fideRating || 0));
     } else if (sortBy === 'rating_low') {
       students.sort((a, b) => (a.fideRating || 0) - (b.fideRating || 0));

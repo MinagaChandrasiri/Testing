@@ -211,12 +211,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function suggestAgeCategory(age) {
     let cat = 'Open / Adult';
-    if (age < 8) cat = 'Under 8';
-    else if (age <= 9) cat = 'Under 10';
-    else if (age <= 11) cat = 'Under 12';
-    else if (age <= 13) cat = 'Under 14';
-    else if (age <= 15) cat = 'Under 16';
-    else if (age <= 17) cat = 'Under 18';
+    if (age <= 6) cat = 'Under 7';
+    else if (age <= 8) cat = 'Under 9';
+    else if (age <= 10) cat = 'Under 11';
+    else if (age <= 12) cat = 'Under 13';
+    else if (age <= 14) cat = 'Under 15';
+    else if (age <= 16) cat = 'Under 17';
 
     ageGroupSelect.value = cat;
   }
