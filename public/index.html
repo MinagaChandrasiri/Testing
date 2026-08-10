@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Caissa Chess Academy - Student Details & Profile Portal">
+  <title>Caissa Chess Academy - Student Details</title>
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- jsPDF for client-side PDF download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-chess-knight"></i>
+        </div>
+        <div class="brand-text">
+          <h1>Caissa Chess Academy</h1>
+          <p class="subtitle">Student Registration & Details Portal</p>
+        </div>
+      </div>
+      
+      <div class="header-actions">
+        <div class="privacy-badge">
+          <i class="fa-solid fa-user-shield"></i> <span>Privacy Protected</span>
+        </div>
+        <button id="admin-toggle-btn" class="btn btn-sm btn-outline" title="Coach Access Mode">
+          <i class="fa-solid fa-lock"></i> Coach Access
+        </button>
+        <button id="theme-toggle-btn" class="icon-btn" title="Toggle Theme" aria-label="Toggle Theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+    
+    <!-- Privacy Notice Banner -->
+    <div class="privacy-notice-banner">
+      <div class="notice-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <div class="notice-text">
+        <strong>Privacy Notice:</strong> Student details are strictly confidential. Complete the step-by-step registration form below.
+      </div>
+    </div>
+
+    <!-- STUDENT VIEW (Default View) -->
+    <div id="student-portal-view" class="portal-grid">
+      
+      <!-- Student Registration Form Section (Multi-step Form) -->
+      <section class="form-section card">
+        <div class="card-header">
+          <h2><i class="fa-solid fa-file-pen"></i> <span id="form-title">Student Registration Form</span></h2>
+          <span class="badge" id="form-mode-badge">Step-by-Step Form</span>
+        </div>
+        
+        <form id="student-form" novalidate>
+          <input type="hidden" id="student-db-id" value="">
+
+          <!-- STEPPER PROGRESS TRACKER -->
+          <div class="form-stepper">
+            <div class="step-item active" id="step-tab-1">
+              <div class="step-num"><i class="fa-solid fa-child"></i></div>
+              <div class="step-label">Step 1<br><small>Student Details</small></div>
+            </div>
+            <div class="step-line" id="step-line-1"></div>
+            <div class="step-item" id="step-tab-2">
+              <div class="step-num"><i class="fa-solid fa-users"></i></div>
+              <div class="step-label">Step 2<br><small>Parent Details</small></div>
+            </div>
+            <div class="step-line" id="step-line-2"></div>
+            <div class="step-item" id="step-tab-3">
+              <div class="step-num"><i class="fa-solid fa-trophy"></i></div>
+              <div class="step-label">Step 3<br><small>Youth Team</small></div>
+            </div>
+          </div>
+
+          <!-- STEP 1 PANE: STUDENT DETAILS -->
+          <div class="form-step-pane" id="step-pane-1">
+            <div class="section-divider">
+              <i class="fa-solid fa-child"></i> Step 1: Student Details
+            </div>
+
+            <!-- QUESTION 1 -->
+            <div class="question-block">
+              <div class="question-badge"><i class="fa-solid fa-circle-question"></i> Question 1</div>
+              <div class="form-group full-width">
+                <label for="nameWithInitials">
+                  Student Name With Initials <span class="required">*</span>
+                </label>
+                <div class="input-icon-wrapper">
+                  <i class="fa-solid fa-user input-icon"></i>
+                  <input type="text" id="nameWithInitials" name="nameWithInitials" placeholder="e.g. K.A. Nimal Perera" required autocomplete="name">
+                </div>
+                <span class="error-msg" id="nameWithInitials-error">Please enter student name with initials.</span>
+              </div>
+            </div>
+
+            <!-- QUESTION 2 & QUESTION 3 -->
+            <div class="form-grid-2">
+              <div class="question-block">
+                <div class="question-badge"><i class="fa-solid fa-circle-question"></i> Question 2</div>
+                <div class="form-group">
+                  <label for="dob">
+                    BirthDay <span class="required">*</span>
+                  </label>
+                  <div class="input-icon-wrapper">
+                    <i class="fa-solid fa-cake-candles input-icon"></i>
+                    <input type="date" id="dob" name="dob" required>
+                  </div>
+                  <span class="error-msg" id="dob-error">Please select birthday.</span>
+                </div>
+              </div>
+
+              <div class="question-block">
+                <div class="question-badge"><i class="fa-solid fa-circle-question"></i> Question 3</div>
+                <div class="form-group">
+                  <label for="age">
+                    Age (Years)
+                  </label>
+                  <div class="input-icon-wrapper">
+                    <i class="fa-solid fa-hourglass-half input-icon"></i>
+                    <input type="number" id="age" name="age" placeholder="Auto-calculated" readonly class="readonly-input">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- QUESTION 4 -->
+            <div class="question-block">
+              <div class="question-badge"><i class="fa-solid fa-circle-question"></i> Question 4</div>
+              <div class="form-group full-width">
+                <label for="ageGroup">
+                  Related Age Category <span class="required">*</span>
+                </label>
+                <div class="input-icon-wrapper">
+                  <i class="fa-solid fa-users-between-lines input-icon"></i>
+                  <select id="ageGroup" name="ageGroup" required>
+                    <option value="" disabled selected>Select Age Category</option>
+                    <option value="Under 8">Under 8 (U-8)</option>
+                    <option value="Under 10">Under 10 (U-10)</option>
+                    <option value="Under 12">Under 12 (U-12)</option>
+                    <option value="Under 14">Under 14 (U-14)</option>
+                    <option value="Under 16">Under 16 (U-16)</option>
+                    <option value="Under 18">Under 18 (U-18)</option>
+                    <option value="Open / Adult">Open / Adult</option>
+                  </select>
+                </div>
+                <span class="error-msg" id="ageGroup-error">Please select age category.</span>
+              </div>
+            </div>
+
+            <!-- QUESTION 5: SCHOOL -->
+            <div class="question-block">
+              <div class="question-badge"><i class="fa-solid fa-circle-question"></i> Question 5</div>
+              <div class="form-group full-width">
+                <label for="school">
+                  School <span class="required">*</span>
+                </label>
+                <div class="input-icon-wrapper">
+                  <i class="fa-solid fa-school input-icon"></i>
+                  <input type="text" id="school" name="school" placeholder="e.g. Royal College / Visakha Vidyalaya" required>
+                </div>
+                <span class="error-msg" id="school-error">Please enter school name.</span>
+              </div>
+            </div>
+
+            <!-- QUESTION 6: CHESS NAME (OPTIONAL) -->
+            <div class="question-block optional">
+              <div class="question-badge optional"><i class="fa-solid fa-circle-info"></i> Question 6 (Optional)</div>
+              <div class="form-group full-width">
+                <label for="chessName">
+                  Name Used in Chess <span class="optional-tag">(Optional)</span>
+                </label>
+                <div class="input-icon-wrapper">
+                  <i class="fa-solid fa-chess-board input-icon"></i>
+                  <input type="text" id="chessName" name="chessName" placeholder="e.g. Nimal Perera (Leave blank if same as above)">
+                </div>
+              </div>
+            </div>
+
+            <!-- QUESTION 7: COACH NOTES (OPTIONAL) -->
+            <div class="question-block optional">
+              <div class="question-badge optional"><i class="fa-solid fa-circle-info"></i> Question 7 (Optional)</div>
+              <div class="form-group full-width">
+                <label for="coachNotes">
+                  Special Notes for Coach <span class="optional-tag">(Optional)</span>
+                </label>
+                <textarea id="coachNotes" name="coachNotes" rows="3" placeholder="Any special needs, medical info, training preferences or play schedule notes..."></textarea>
+              </div>
+            </div>
+
+            <div class="step-actions right">
+              <button type="button" id="btn-next-step-1" class="btn btn-primary btn-lg">
+                Next: Parent Details <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 2 PANE: PARENT DETAILS -->
+          <div class="form-step-pane hidden" id="step-pane-2">
+            <div class="section-divider">
+              <i class="fa-solid fa-users"></i> Step 2: Parent / Guardian Details
+            </div>
+
+            <!-- QUESTION 8 -->
+            <div class="question-block">
+              <div class="question-badge"><i class="fa-solid fa-circle-question"></i> Question 8</div>
+              <div class="form-group full-width">
+                <label for="parentName">
+                  Parent's Name <span class="required">*</span>
+                </label>
+                <div class="input-icon-wrapper">
+                  <i class="fa-solid fa-user-tie input-icon"></i>
+                  <input type="text" id="parentName" name="parentName" placeholder="e.g. K.A. Suneth Perera" required>
+                </div>
+                <span class="error-msg" id="parentName-error">Please enter parent's name.</span>
+              </div>
+            </div>
+
+            <!-- QUESTION 9 & QUESTION 10 -->
+            <div class="form-grid-2">
+              <div class="question-block">
+                <div class="question-badge"><i class="fa-solid fa-circle-question"></i> Question 9</div>
+                <div class="form-group">
+                  <label for="phone">
+                    WhatsApp Number <span class="required">*</span>
+                  </label>
+                  <div class="input-icon-wrapper">
+                    <i class="fa-brands fa-whatsapp input-icon" style="color: #25d366; font-size: 1rem;"></i>
+                    <input type="tel" id="phone" name="phone" placeholder="+94 77 000 0000" required autocomplete="tel">
+                  </div>
+                  <span class="error-msg" id="phone-error">Please enter WhatsApp number.</span>
+                </div>
+              </div>
+
+              <div class="question-block">
+                <div class="question-badge"><i class="fa-solid fa-circle-question"></i> Question 10</div>
+                <div class="form-group">
+                  <label for="email">
+                    Email <span class="required">*</span>
+                  </label>
+                  <div class="input-icon-wrapper">
+                    <i class="fa-solid fa-envelope input-icon"></i>
+                    <input type="email" id="email" name="email" placeholder="parent@gmail.com" required autocomplete="email">
+                  </div>
+                  <span class="error-msg" id="email-error">Please enter a valid email address.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-actions flex-between">
+              <button type="button" id="btn-back-step-2" class="btn btn-secondary">
+                <i class="fa-solid fa-arrow-left"></i> Back: Student Info
+              </button>
+              <button type="button" id="btn-next-step-2" class="btn btn-primary">
+                Next: Youth Team <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 3 PANE: YOUTH TEAM SELECTION -->
+          <div class="form-step-pane hidden" id="step-pane-3">
+            <div class="section-divider">
+              <i class="fa-solid fa-trophy"></i> Step 3: Youth Tournament Details
+            </div>
+
+            <!-- YOUTH TOURNAMENT TRAINING NOTICE CARD -->
+            <div class="youth-notice-card">
+              <div class="youth-notice-header">
+                <i class="fa-solid fa-trophy youth-notice-icon"></i>
+                <div>
+                  <h4>Youth Championship Training Program</h4>
+                  <p class="youth-desc-sinhala">
+                    Training for the Youth Championship will be conducted under 3 main teams. Please select the target team for your child's training program:
+                  </p>
+                </div>
+              </div>
+
+              <!-- QUESTION 11: YOUR STUDENT'S TEAM -->
+              <div class="question-block youth-question-block" style="margin-top: 1rem; margin-bottom: 0;">
+                <div class="question-badge"><i class="fa-solid fa-flag-checkered"></i> Question 11</div>
+                <div class="form-group full-width">
+                  <label for="youthTeam">
+                    Your Student's Team <span class="required">*</span>
+                  </label>
+                  <div class="input-icon-wrapper">
+                    <i class="fa-solid fa-people-group input-icon"></i>
+                    <select id="youthTeam" name="youthTeam" required>
+                      <option value="Team A - Focus to Top 10 Places in Your Category">Team A - Focus to Top 10 Places in Your Category</option>
+                      <option value="Team B - Focus to Top 25 Places in Your Category">Team B - Focus to Top 25 Places in Your Category</option>
+                      <option value="Team C - Focus to Top 50 Places in Your Category">Team C - Focus to Top 50 Places in Your Category</option>
+                    </select>
+                  </div>
+                  <span class="error-msg" id="youthTeam-error">Please select student's team.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-actions flex-between" style="margin-top: 1.5rem;">
+              <button type="button" id="btn-back-step-3" class="btn btn-secondary">
+                <i class="fa-solid fa-arrow-left"></i> Back: Parent Details
+              </button>
+
+              <div class="flex-center gap-1">
+                <button type="button" id="cancel-edit-btn" class="btn btn-secondary hidden">
+                  <i class="fa-solid fa-xmark"></i> Cancel Edit
+                </button>
+                <button type="reset" id="reset-btn" class="btn btn-outline">
+                  <i class="fa-solid fa-rotate-left"></i> Reset
+                </button>
+                <button type="submit" id="submit-btn" class="btn btn-primary">
+                  <i class="fa-solid fa-paper-plane"></i> <span id="submit-btn-text">Submit Details</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </section>
+
+    </div>
+
+    <!-- COACH / ADMIN DASHBOARD VIEW (Hidden by default) -->
+    <div id="admin-dashboard-view" class="hidden">
+      <div class="admin-banner flex-between">
+        <div class="admin-title">
+          <h2><i class="fa-solid fa-user-shield"></i> Coach & Academy Roster Management</h2>
+          <p>Authorized access to view and manage all student details & export rosters.</p>
+        </div>
+        <button id="exit-admin-btn" class="btn btn-sm btn-secondary">
+          <i class="fa-solid fa-door-open"></i> Exit Coach View
+        </button>
+      </div>
+
+      <!-- Dashboard Overview Cards -->
+      <section class="stats-grid" id="stats-section">
+        <div class="stat-card">
+          <div class="stat-icon amber"><i class="fa-solid fa-chess-pawn"></i></div>
+          <div class="stat-info"><h3 id="stat-total">0</h3><p>Active Chess Students</p></div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon emerald"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="stat-info"><h3 id="stat-avg-rating">0</h3><p>Average FIDE / ELO Rating</p></div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon purple"><i class="fa-solid fa-award"></i></div>
+          <div class="stat-info"><h3 id="stat-titled-count">0</h3><p>FIDE Titled Players</p></div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon gold"><i class="fa-solid fa-trophy"></i></div>
+          <div class="stat-info"><h3 id="stat-top-player">-</h3><p>Top Rated Student</p></div>
+        </div>
+      </section>
+
+      <!-- Student Directory Table Card -->
+      <section class="records-section card">
+        <div class="card-header flex-between">
+          <h2><i class="fa-solid fa-chess-queen"></i> Academy Roster Directory</h2>
+          <div class="export-actions">
+            <button id="export-csv-btn" class="btn btn-sm btn-outline" title="Export as CSV"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+            <button id="export-json-btn" class="btn btn-sm btn-outline" title="Export as JSON"><i class="fa-solid fa-file-code"></i> Export JSON</button>
+          </div>
+        </div>
+
+        <div class="controls-bar">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="search-input" placeholder="Search student name, team, school, parent name, ID, whatsapp, email...">
+            <button id="clear-search-btn" class="clear-btn hidden"><i class="fa-solid fa-circle-xmark"></i></button>
+          </div>
+
+          <div class="filter-controls">
+            <select id="filter-category" aria-label="Filter by Team">
+              <option value="All">All Teams</option>
+              <option value="Team A">Team A</option>
+              <option value="Team B">Team B</option>
+              <option value="Team C">Team C</option>
+            </select>
+
+            <select id="sort-by" aria-label="Sort By">
+              <option value="rating_high">Sort: Highest Rating</option>
+              <option value="rating_low">Sort: Lowest Rating</option>
+              <option value="name">Sort: Name (A-Z)</option>
+              <option value="id">Sort: Chess ID</option>
+              <option value="recent">Sort: Most Recent</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="students-table">
+            <thead>
+              <tr>
+                <th>Chess ID</th>
+                <th>Student Name</th>
+                <th>Youth Team</th>
+                <th>School</th>
+                <th>Parent's Name</th>
+                <th>Age / DOB</th>
+                <th>WhatsApp & Email</th>
+                <th class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="students-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+          
+          <div id="no-records-msg" class="empty-state hidden">
+            <i class="fa-solid fa-chess-board empty-icon"></i>
+            <p>No chess students found matching filters.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <!-- REGISTRATION SUCCESS & RULES PDF DOWNLOAD MODAL -->
+  <dialog id="success-modal" class="custom-modal">
+    <div class="modal-content success-modal-content">
+      <div class="modal-header text-center flex-column">
+        <div class="success-icon-badge">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h2 style="font-size: 1.4rem; font-weight: 700; margin-top: 0.5rem; color: var(--text-primary);">
+          Registration Completed Successfully!
+        </h2>
+      </div>
+
+      <div class="modal-body">
+        <div class="submitted-summary-card">
+          <div class="summary-row">
+            <span class="sum-label">Student ID:</span>
+            <span class="sum-val highlight" id="success-student-id">CHS1001</span>
+          </div>
+          <div class="summary-row">
+            <span class="sum-label">Student Name:</span>
+            <span class="sum-val" id="success-student-name">-</span>
+          </div>
+          <div class="summary-row">
+            <span class="sum-label">School:</span>
+            <span class="sum-val" id="success-school">-</span>
+          </div>
+          <div class="summary-row">
+            <span class="sum-label">Selected Youth Team:</span>
+            <span class="sum-val youth-team-val" id="success-youth-team">-</span>
+          </div>
+        </div>
+
+        <div class="rules-download-banner">
+          <div class="banner-icon"><i class="fa-solid fa-file-pdf"></i></div>
+          <div class="banner-text">
+            <strong>Academy Rules & Regulations Sheet</strong>
+            <p>Download the official Youth Championship rules, training schedule & code of conduct (PDF).</p>
+          </div>
+        </div>
+
+        <div class="modal-actions-grid">
+          <button type="button" id="download-rules-pdf-btn" class="btn btn-primary btn-lg full-width">
+            <i class="fa-solid fa-file-pdf"></i> Download Rules & Regulations (PDF)
+          </button>
+          <button type="button" id="close-success-modal-btn" class="btn btn-secondary full-width" style="margin-top: 0.5rem;">
+            <i class="fa-solid fa-xmark"></i> Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Coach Passcode Modal -->
+  <dialog id="admin-passcode-modal" class="custom-modal">
+    <div class="modal-content" style="max-width: 420px;">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-user-shield"></i> Coach Access Verification</h3>
+        <button id="close-passcode-modal" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+          Please enter the Coach Passcode to access full student directory & analytics:
+        </p>
+        <form id="passcode-form">
+          <div class="form-group">
+            <label for="coach-passcode">Coach Passcode</label>
+            <div class="input-icon-wrapper">
+              <i class="fa-solid fa-key input-icon"></i>
+              <input type="password" id="coach-passcode" placeholder="Default passcode: coach123" required>
+            </div>
+            <span class="error-msg" id="passcode-error">Incorrect passcode. Try coach123</span>
+          </div>
+          <div class="form-actions" style="margin-top: 1.2rem; justify-content: flex-end;">
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-unlock"></i> Unlock View</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="toast hidden">
+    <i id="toast-icon" class="fa-solid fa-circle-check"></i>
+    <span id="toast-message">Action successful!</span>
+  </div>
+
+  <footer class="app-footer">
+    <p>Caissa Chess Academy &bull; Student Privacy Portal &bull; Port <strong>7070</strong></p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

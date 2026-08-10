@@ -1,0 +1,19 @@
+{
+  "name": "students-details-app",
+  "version": "1.0.0",
+  "description": "Web application for gathering and managing student details on port 7070",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2",
+    "mongoose": "^9.9.1"
+  }
+}
