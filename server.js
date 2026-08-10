@@ -393,11 +393,6 @@ app.post('/api/students', async (req, res) => {
 
   const students = await getStudentsList();
   
-  const existingEmail = students.find(s => s.email && s.email.toLowerCase() === email.toLowerCase());
-  if (existingEmail) {
-    return res.status(400).json({ success: false, message: 'A chess student record with this email address already exists.' });
-  }
-
   let studentId = customId ? customId.trim() : null;
   if (!studentId) {
     const nextNum = students.length > 0 
@@ -470,13 +465,6 @@ app.put('/api/students/:id', async (req, res) => {
     parentName, phone, email, category, fideRating, fideTitle, 
     playingStyle, fideId, coach, gender, onlineHandle, notes 
   } = req.body;
-
-  if (email && email.toLowerCase() !== students[index].email.toLowerCase()) {
-    const duplicate = students.find(s => s.email && s.email.toLowerCase() === email.toLowerCase() && s.id !== id);
-    if (duplicate) {
-      return res.status(400).json({ success: false, message: 'Another student already has this email address.' });
-    }
-  }
 
   const calculatedAge = dob ? calculateAge(dob) : (age !== undefined ? parseInt(age) : students[index].age);
 
