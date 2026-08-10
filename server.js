@@ -182,13 +182,15 @@ if (process.env.MONGODB_URI) {
       isMongoConnected = true;
       console.log('🍃 Successfully connected to MongoDB Atlas!');
       
-      // Auto-seed if collection is empty
+      // Auto-seed if collection has fewer than 10 records
       const count = await StudentModel.countDocuments();
-      if (count === 0) {
-        console.log('🌱 MongoDB collection empty. Seeding initial student records...');
+      if (count < 10) {
+        console.log(`🌱 MongoDB collection has ${count} records. Syncing full student roster...`);
         const jsonStudents = readStudentsFromFile();
-        await StudentModel.insertMany(jsonStudents);
-        console.log(`✅ Seeded ${jsonStudents.length} student records into MongoDB!`);
+        for (const s of jsonStudents) {
+          await StudentModel.updateOne({ id: s.id }, { $set: s }, { upsert: true });
+        }
+        console.log(`✅ Synced ${jsonStudents.length} student records into MongoDB Atlas!`);
       }
     })
     .catch((err) => {

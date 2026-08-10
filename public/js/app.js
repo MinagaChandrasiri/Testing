@@ -396,6 +396,9 @@ document.addEventListener('DOMContentLoaded', () => {
         </td>
         <td class="text-right">
           <div class="action-buttons">
+            <button class="action-btn view" onclick="viewStudentDetails('${student.id}')" title="View Full Details">
+              <i class="fa-solid fa-eye"></i>
+            </button>
             <button class="action-btn edit" onclick="editStudent('${student.id}')" title="Edit Student">
               <i class="fa-solid fa-pen"></i>
             </button>
@@ -408,6 +411,86 @@ document.addEventListener('DOMContentLoaded', () => {
       tableBody.appendChild(tr);
     });
   }
+
+  // Coach View Full Student Details Modal logic
+  const coachViewModal = document.getElementById('coach-view-student-modal');
+  const coachViewModalBody = document.getElementById('coach-view-modal-body');
+  const closeCoachViewModal = document.getElementById('close-coach-view-modal');
+
+  if (closeCoachViewModal) {
+    closeCoachViewModal.addEventListener('click', () => coachViewModal.close());
+  }
+
+  window.viewStudentDetails = function(id) {
+    const student = currentStudentsData.find(s => s.id === id);
+    if (!student) return;
+
+    const displayName = student.nameWithInitials || student.fullName;
+    const calcAge = student.dob ? calculateAgeFromDOB(student.dob) : (student.age || 'N/A');
+
+    coachViewModalBody.innerHTML = `
+      <div class="submitted-summary-card" style="margin-bottom: 1rem;">
+        <div class="summary-row">
+          <span class="sum-label">Student ID:</span>
+          <span class="sum-val highlight">${escapeHtml(student.id)}</span>
+        </div>
+        <div class="summary-row">
+          <span class="sum-label">Q1. Student Name with Initials:</span>
+          <span class="sum-val">${escapeHtml(displayName)}</span>
+        </div>
+        <div class="summary-row">
+          <span class="sum-label">Q2. BirthDay:</span>
+          <span class="sum-val">${student.dob ? escapeHtml(student.dob) : 'N/A'}</span>
+        </div>
+        <div class="summary-row">
+          <span class="sum-label">Q3. Calculated Age:</span>
+          <span class="sum-val">${calcAge} Years Old</span>
+        </div>
+        <div class="summary-row">
+          <span class="sum-label">Q4. Related Age Category:</span>
+          <span class="sum-val">${escapeHtml(student.ageGroup)}</span>
+        </div>
+        <div class="summary-row">
+          <span class="sum-label">Q5. School:</span>
+          <span class="sum-val">${student.school ? escapeHtml(student.school) : 'N/A'}</span>
+        </div>
+        <div class="summary-row">
+          <span class="sum-label">Q6. Name Used in Chess:</span>
+          <span class="sum-val">${student.chessName ? escapeHtml(student.chessName) : 'Same as above'}</span>
+        </div>
+        <div class="summary-row">
+          <span class="sum-label">Q7. Special Notes for Coach:</span>
+          <span class="sum-val" style="color: var(--primary-color); font-weight: 600;">${student.coachNotes ? escapeHtml(student.coachNotes) : 'None'}</span>
+        </div>
+        <div class="summary-row">
+          <span class="sum-label">Q8. Parent's Name:</span>
+          <span class="sum-val">${student.parentName ? escapeHtml(student.parentName) : 'N/A'}</span>
+        </div>
+        <div class="summary-row">
+          <span class="sum-label">Q9. WhatsApp Number:</span>
+          <span class="sum-val" style="color: #25d366;"><i class="fa-brands fa-whatsapp"></i> ${student.phone ? escapeHtml(student.phone) : 'N/A'}</span>
+        </div>
+        <div class="summary-row">
+          <span class="sum-label">Q10. Email:</span>
+          <span class="sum-val">${escapeHtml(student.email)}</span>
+        </div>
+        <div class="summary-row">
+          <span class="sum-label">Q11. Selected Youth Team:</span>
+          <span class="sum-val youth-team-val">${escapeHtml(student.youthTeam || 'Team A')}</span>
+        </div>
+      </div>
+      <div class="flex-between gap-1" style="margin-top: 1.2rem;">
+        <button class="btn btn-secondary full-width" onclick="document.getElementById('coach-view-student-modal').close()">
+          <i class="fa-solid fa-xmark"></i> Close Details
+        </button>
+        <button class="btn btn-primary full-width" onclick="document.getElementById('coach-view-student-modal').close(); editStudent('${student.id}')">
+          <i class="fa-solid fa-pen"></i> Edit Student
+        </button>
+      </div>
+    `;
+
+    coachViewModal.showModal();
+  };
 
   window.editStudent = function(id) {
     const student = currentStudentsData.find(s => s.id === id);
